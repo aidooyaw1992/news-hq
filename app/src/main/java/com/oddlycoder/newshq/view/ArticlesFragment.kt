@@ -114,8 +114,7 @@ class ArticlesFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
-            MainActivity.setArticle(article)
-            val fragment = ArticleDetailFragment.newInstance()
+            val fragment = ArticleDetailFragment.newInstance(article)
             val fm = activity?.supportFragmentManager
             fm?.beginTransaction()
                 ?.replace(R.id.fragment_container, fragment)

@@ -38,4 +38,4 @@ data class Article (
     val image: String,
     @JsonProperty("date")
     val date: String
-)
+) : Serializable

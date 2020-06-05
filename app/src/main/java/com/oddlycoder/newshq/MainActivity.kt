@@ -24,18 +24,7 @@ class MainActivity : AppCompatActivity() {
     
     companion object {
         private const val TAG = "MainActivity"
-        private lateinit var article: Article
-
         var networkConnected: Boolean = false
-
-        fun setArticle(article: Article) {
-            this.article = article
-        }
-
-        fun getArticle(): Article {
-            return article
-        }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,13 +39,11 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction().add(binding.fragmentContainer.id, article)
                     .commit()
             }
-
         }
 
         networkConnected = isNetworkConnected()
         Log.d(TAG, "has network: $networkConnected")
     }
-
 
 
     @RequiresApi(Build.VERSION_CODES.M)

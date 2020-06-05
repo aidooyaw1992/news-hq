@@ -1,6 +1,7 @@
 package com.oddlycoder.newshq.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,9 +29,12 @@ class ArticleDetailFragment : Fragment() {
 
     companion object {
         private const val ARTICLE = "article"
+        private const val TAG = "ArticleDetailFragment"
         // detail factory setup
-        fun newInstance(): ArticleDetailFragment {
-            return ArticleDetailFragment()
+        fun newInstance(article: Article): ArticleDetailFragment {
+            val aArgs = Bundle()
+            aArgs.putSerializable(ARTICLE, article)
+            return ArticleDetailFragment().also { detail -> detail.arguments = aArgs }
         }
     }
 
@@ -42,13 +46,31 @@ class ArticleDetailFragment : Fragment() {
         _binding = FragmentArticleDetailBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
+        // restore article state
+        if (savedInstanceState != null) {
+            articleDetailViewModel.setArticle(savedInstanceState.getSerializable(ARTICLE) as Article)
+        }
+
+        // was article passed to fragment
+        if (arguments != null) {
+            val article = arguments?.getSerializable(ARTICLE)
+            articleDetailViewModel.setArticle(article as Article)
+        }
+
         binding.imageViewDetailPopBack.setOnClickListener(View.OnClickListener { v ->
             popBackFragment()
         })
 
-        articleDetailViewModel.setArticle(MainActivity.getArticle())
+        Log.d(TAG, "onCreateView: Image ${articleDetailViewModel.getArticle().url}")
+
         setupUI()
         return view
+    }
+
+    // persist article model
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(ARTICLE, articleDetailViewModel.getArticle())
     }
 
     private fun setupUI() {
@@ -66,7 +88,7 @@ class ArticleDetailFragment : Fragment() {
 
     }
 
-    fun popBackFragment() {
+    private fun popBackFragment() {
         activity?.onBackPressed()
     }
 
