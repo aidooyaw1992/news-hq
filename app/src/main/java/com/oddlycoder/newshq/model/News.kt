@@ -1,7 +1,7 @@
 package com.oddlycoder.newshq.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
-
+import java.io.Serializable
 
 data class News(
     @JsonProperty("count")
@@ -21,7 +21,7 @@ data class Urls(
     val prev: String
 )
 
-data class Article(
+data class Article (
     @JsonProperty("id")
     val id: String,
     @JsonProperty("url")

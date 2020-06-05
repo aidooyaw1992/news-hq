@@ -15,11 +15,10 @@ object NewsBuilder {
 
     // articles from response
     private var articlesData = MutableLiveData<List<Article>>()
-    private var articlesList = mutableListOf<Article>()
 
     init {
         val baseUrl = "https://learnappmaking.com/ex/"
-        // todo: could do better: store some where later
+        // todo: store in diff loc
         val key = "CHWGk3OTwgObtQxGqdLvVhwji6FsYm95oe87o3ju"
 
 
@@ -37,26 +36,20 @@ object NewsBuilder {
         call.enqueue(object: Callback<News> {
 
             override fun onResponse(call: Call<News>, response: Response<News>) {
-                if (!response.isSuccessful){
-                    Log.d(TAG, "onResponse: Something went wrong ${response.code()}")
-                    return
-                }
-                Log.d(TAG, "onResponse: response success: ${response.code()}")
+                if (!response.isSuccessful) return
+
                 val news = response.body()
-                // set articles if non null
-                articlesList = news?.articles as MutableList<Article>
-                articlesData.value = articlesList
-                // todo: for debugging.. remove later
-                val rArticle = news.articles
-                Log.d(TAG, "onResponse: Article: Articles Retrieve(${rArticle.size}) ${rArticle[1].title}")
+
+                // set articles if safe
+                articlesData.value = news?.articles as MutableList<Article>
             }
 
             override fun onFailure(call: Call<News>, t: Throwable) {
                 Log.d(TAG, "onFailure: something went wrong", t)
+                // todo (remake call)
             }
         })
     }
-
 
     fun getArticles(): LiveData<List<Article>> {
         return articlesData

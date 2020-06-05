@@ -18,23 +18,19 @@ class ArticlesViewModel : ViewModel() {
     private var articlesLiveData = MutableLiveData<List<Article>>()
     private var articlesList = mutableListOf<Article>()
 
-    
-    init { 
-        start()
-       // articlesLiveData.value = articlesList
+    // setup for detail fragment
+    fun articlesList(): List<Article> {
+        return articlesList
     }
 
     // return articles from news results from repository
-    fun start() {
-        articlesList.let {
-            repository.getArticles()
-        }
-        articlesLiveData.value = articlesList
-    }
-
     fun allArticles(): MutableLiveData<List<Article>> {
-        // return articlesLiveData
-        return repository.getArticles() as MutableLiveData<List<Article>>
+        articlesLiveData = repository.getArticles() as MutableLiveData<List<Article>>
+        //return repository.getArticles() as MutableLiveData<List<Article>>
+        articlesList.let {
+            articlesLiveData
+        }
+        return articlesLiveData
     }
 
 }

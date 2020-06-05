@@ -13,10 +13,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.oddlycoder.newshq.MainActivity
 import com.oddlycoder.newshq.R
 import com.oddlycoder.newshq.databinding.FragmentArticlesBinding
 import com.oddlycoder.newshq.model.Article
 import com.oddlycoder.newshq.viewmodel.ArticlesViewModel
+import java.io.Serializable
 
 class ArticlesFragment : Fragment() {
 
@@ -35,7 +37,7 @@ class ArticlesFragment : Fragment() {
     companion object {
         private const val TAG = "ArticleFragment"
 
-        // setup fragment singleton
+        // setup fragment factory
         fun newInstance(): ArticlesFragment {
             return ArticlesFragment()
         }
@@ -49,27 +51,20 @@ class ArticlesFragment : Fragment() {
         _binding = FragmentArticlesBinding.inflate(layoutInflater, container, false)
         val view = binding.root
         binding.articlesRecyclerView.layoutManager = LinearLayoutManager(context)
+        // hide scroll end effect
+        binding.articlesRecyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         binding.progressCircular.visibility = View.VISIBLE
+        // initialize recycler view and articles
         updateUI()
         return view
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     private fun updateUI() {
-      /*  articleViewModel.getArticles().observe(this, Observer { articles: List<Article> ->
-            adapter = ArticlesAdapter(articles)
-            binding.articlesRecyclerView.adapter = adapter
-            binding.progressCircular.visibility = View.GONE
-        })*/
-        Log.d(TAG, "updateUI: In updateUI")
         articleViewModel.allArticles().observe(this, Observer { liveArticles ->
-            Log.d(TAG, "updateUI: Fetching articles: ${liveArticles.size}")
             adapter = ArticlesAdapter(liveArticles)
             binding.articlesRecyclerView.adapter = adapter
             binding.progressCircular.visibility = View.GONE
+            // reload recycler if data is retrieve
             adapter?.notifyDataSetChanged()
         })
 
@@ -95,6 +90,7 @@ class ArticlesFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
             val article = articles[position]
+            // set article result to needed view element
             holder.bind(article)
         }
     }
@@ -105,7 +101,7 @@ class ArticlesFragment : Fragment() {
         private lateinit var article: Article
 
         private val titleTextView = itemView.findViewById<TextView>(R.id.list_item_title)
-        private val publisherTextView = itemView.findViewById<TextView>(R.id.list_item_publisher)
+        private val authorTextView = itemView.findViewById<TextView>(R.id.list_item_author)
 
         init {
             itemView.setOnClickListener(this)
@@ -113,12 +109,18 @@ class ArticlesFragment : Fragment() {
 
         fun bind(article: Article) {
             this.article = article
-            titleTextView.text = article.text
-            publisherTextView.text = article.publisher
+            titleTextView.text = article.title
+            authorTextView.text = article.author
         }
 
         override fun onClick(v: View?) {
-            Toast.makeText(context, "article", Toast.LENGTH_SHORT).show()
+            MainActivity.setArticle(article)
+            val fragment = ArticleDetailFragment.newInstance()
+            val fm = activity?.supportFragmentManager
+            fm?.beginTransaction()
+                ?.replace(R.id.fragment_container, fragment)
+                ?.addToBackStack("detail_fragment")
+                ?.commit()
         }
     }
 }
