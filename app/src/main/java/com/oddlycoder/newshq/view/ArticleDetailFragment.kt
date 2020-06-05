@@ -41,6 +41,11 @@ class ArticleDetailFragment : Fragment() {
     ): View? {
         _binding = FragmentArticleDetailBinding.inflate(layoutInflater, container, false)
         val view = binding.root
+
+        binding.imageViewDetailPopBack.setOnClickListener(View.OnClickListener { v ->
+            popBackFragment()
+        })
+
         articleDetailViewModel.setArticle(MainActivity.getArticle())
         setupUI()
         return view
@@ -59,6 +64,10 @@ class ArticleDetailFragment : Fragment() {
             .placeholder(R.drawable.placeholder_gif)
             .into(binding.imageViewDetailImage)
 
+    }
+
+    fun popBackFragment() {
+        activity?.onBackPressed()
     }
 
     override fun onDestroy() {
