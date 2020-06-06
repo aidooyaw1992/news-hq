@@ -10,17 +10,14 @@ import com.oddlycoder.newshq.model.data.remote.NewsBuilder
 
 object Repository {
 
-    private val TAG = "Repository"
-
     private var newsBuilder = NewsBuilder
 
-    init {
-        Log.d(TAG, "repository initialized")
-       // newsBuilder.getArticles()
+    fun reloadArticles() {
+        newsBuilder = NewsBuilder
+        newsBuilder.getArticles()
     }
 
     fun getArticles(): LiveData<List<Article>> {
-        Log.d(TAG, "repository: -- live data.articles")
         return newsBuilder.getArticles()
     }
 

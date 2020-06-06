@@ -1,19 +1,18 @@
 package com.oddlycoder.newshq.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
-import com.oddlycoder.newshq.MainActivity
 import com.oddlycoder.newshq.R
 import com.oddlycoder.newshq.databinding.FragmentArticleDetailBinding
 import com.oddlycoder.newshq.model.Article
 import com.oddlycoder.newshq.viewmodel.ArticleDetailViewModel
-import java.io.Serializable
+import com.squareup.picasso.Picasso
 
 class ArticleDetailFragment : Fragment() {
 
@@ -29,7 +28,6 @@ class ArticleDetailFragment : Fragment() {
 
     companion object {
         private const val ARTICLE = "article"
-        private const val TAG = "ArticleDetailFragment"
         // detail factory setup
         fun newInstance(article: Article): ArticleDetailFragment {
             val aArgs = Bundle()
@@ -57,14 +55,21 @@ class ArticleDetailFragment : Fragment() {
             articleDetailViewModel.setArticle(article as Article)
         }
 
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         binding.imageViewDetailPopBack.setOnClickListener(View.OnClickListener { v ->
             popBackFragment()
         })
 
-        Log.d(TAG, "onCreateView: Image ${articleDetailViewModel.getArticle().url}")
+        binding.buttonVisitLink.setOnClickListener(View.OnClickListener {
+            openUpBrowser()
+        })
 
         setupUI()
-        return view
     }
 
     // persist article model
@@ -79,13 +84,24 @@ class ArticleDetailFragment : Fragment() {
         binding.textViewDetailAuthor.text = articleDetailViewModel.getArticle().author
         binding.textViewDetailDescription.text = articleDetailViewModel.getArticle().text
 
-        // load image from url
-        Glide.with(this)
-            .load(articleDetailViewModel.getArticle().url)
-            .centerCrop()
+        // load image from url if not url not empty
+        if (articleDetailViewModel.getArticle().image.isEmpty()) {
+            binding.imageViewDetailImage.setImageResource(R.drawable.error_loading_image)
+            return
+        }
+        Picasso
+            .get()
+            .load(articleDetailViewModel.getArticle().image)
+            .error(R.drawable.error_loading_image)
             .placeholder(R.drawable.placeholder_gif)
             .into(binding.imageViewDetailImage)
 
+    }
+
+    private fun openUpBrowser() {
+        val uri = Uri.parse(articleDetailViewModel.getArticle().url)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        startActivity(intent)
     }
 
     private fun popBackFragment() {

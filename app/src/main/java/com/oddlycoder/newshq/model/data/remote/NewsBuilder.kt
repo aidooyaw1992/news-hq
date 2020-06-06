@@ -6,19 +6,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.oddlycoder.newshq.model.Article
 import com.oddlycoder.newshq.model.News
+import okhttp3.OkHttpClient
 import retrofit2.*
 import retrofit2.converter.jackson.JacksonConverterFactory
 
 object NewsBuilder {
-
-    val TAG = "NewsBuilder"
 
     // articles from response
     private var articlesData = MutableLiveData<List<Article>>()
 
     init {
         val baseUrl = "https://learnappmaking.com/ex/"
-        // todo: store in diff loc
         val key = "CHWGk3OTwgObtQxGqdLvVhwji6FsYm95oe87o3ju"
 
 
@@ -45,8 +43,7 @@ object NewsBuilder {
             }
 
             override fun onFailure(call: Call<News>, t: Throwable) {
-                Log.d(TAG, "onFailure: something went wrong", t)
-                // todo (remake call)
+                Log.d("NewsBuilder", "onFailure: something went wrong ", t)
             }
         })
     }

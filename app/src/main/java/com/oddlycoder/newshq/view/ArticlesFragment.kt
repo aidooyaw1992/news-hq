@@ -35,8 +35,6 @@ class ArticlesFragment : Fragment() {
     private var adapter: ArticlesAdapter? = null
 
     companion object {
-        private const val TAG = "ArticleFragment"
-
         // setup fragment factory
         fun newInstance(): ArticlesFragment {
             return ArticlesFragment()
@@ -51,9 +49,11 @@ class ArticlesFragment : Fragment() {
         _binding = FragmentArticlesBinding.inflate(layoutInflater, container, false)
         val view = binding.root
         binding.articlesRecyclerView.layoutManager = LinearLayoutManager(context)
+
         // hide scroll end effect
         binding.articlesRecyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         binding.progressCircular.visibility = View.VISIBLE
+
         // initialize recycler view and articles
         updateUI()
         return view
@@ -90,7 +90,7 @@ class ArticlesFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
             val article = articles[position]
-            // set article result to needed view element
+            // set article result to views
             holder.bind(article)
         }
     }
@@ -114,11 +114,13 @@ class ArticlesFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
+            // newInstance factory sets up detail
             val fragment = ArticleDetailFragment.newInstance(article)
             val fm = activity?.supportFragmentManager
             fm?.beginTransaction()
                 ?.replace(R.id.fragment_container, fragment)
                 ?.addToBackStack("detail_fragment")
+                ?.setCustomAnimations(R.anim.enter_right, R.anim.exit_left)
                 ?.commit()
         }
     }

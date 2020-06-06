@@ -12,18 +12,16 @@ import com.oddlycoder.newshq.model.repository.Repository
 
 class ArticlesViewModel : ViewModel() {
 
-    private val TAG = "ArticlesViewModel"
     private val repository: Repository = Repository
 
     private var articlesLiveData = MutableLiveData<List<Article>>()
     private var articlesList = mutableListOf<Article>()
 
-    // setup for detail fragment
     fun articlesList(): List<Article> {
         return articlesList
     }
 
-    // return articles from news results from repository
+    // articles news result
     fun allArticles(): MutableLiveData<List<Article>> {
         articlesLiveData = repository.getArticles() as MutableLiveData<List<Article>>
         //return repository.getArticles() as MutableLiveData<List<Article>>

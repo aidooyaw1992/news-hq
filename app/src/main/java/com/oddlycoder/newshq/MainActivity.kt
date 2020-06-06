@@ -17,14 +17,9 @@ import com.oddlycoder.newshq.view.ArticlesFragment
 
 class MainActivity : AppCompatActivity() {
 
-    // setup activity view binding once
+    // setup activity view binding
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
-    }
-    
-    companion object {
-        private const val TAG = "MainActivity"
-        var networkConnected: Boolean = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,26 +29,16 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
             if (fragment == null) {
-                // call factory instance of articles fragment
+                // setup article fragment from factory
                 val article = ArticlesFragment.newInstance()
                 supportFragmentManager.beginTransaction().add(binding.fragmentContainer.id, article)
                     .commit()
             }
         }
 
-        networkConnected = isNetworkConnected()
-        Log.d(TAG, "has network: $networkConnected")
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    fun isNetworkConnected(): Boolean {
-        val connectivity = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = connectivity.activeNetwork
-        val networkHasConnection = connectivity.getNetworkCapabilities(activeNetwork)
-        return networkHasConnection != null &&
-                networkHasConnection.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
 
 
 }
