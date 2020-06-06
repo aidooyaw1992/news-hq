@@ -6,7 +6,7 @@ source to users.
 
 # Link to App Demo
 
-Link to screen recording of app. Click [here](https://some_youtube_link) to watch
+Link to screen recording of app. Click [here](https://youtu.be/mi_MQoyYdz0) to watch
 
 # How It Works
 
