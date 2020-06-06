@@ -12,11 +12,6 @@ object Repository {
 
     private var newsBuilder = NewsBuilder
 
-    fun reloadArticles() {
-        newsBuilder = NewsBuilder
-        newsBuilder.getArticles()
-    }
-
     fun getArticles(): LiveData<List<Article>> {
         return newsBuilder.getArticles()
     }
