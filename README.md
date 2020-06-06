@@ -1,12 +1,12 @@
 # NEWS HQ - Android App
 
 News HQ has been made for you to comfortably find all your technology news. The app aggregates news 
-from this [api](https://learnappmaking.com/ex/news/articles/Apple?secret=CHWGk3OTwgObtQxGqdLvVhwji6FsYm95oe87o3ju).
+from this [API](https://learnappmaking.com/ex/news/articles/Apple?secret=CHWGk3OTwgObtQxGqdLvVhwji6FsYm95oe87o3ju)
 source to users.
 
 # Link to App Demo
 
-Link to screen recording of app. Click [here](https://youtu.be/mi_MQoyYdz0) to watch
+A screen recording of the app is hosted on youtube. Click [here](https://youtu.be/mi_MQoyYdz0) to watch
 
 # How It Works
 
