@@ -11,7 +11,6 @@ import androidx.work.*
 import com.oddlycoder.newshq.R
 import com.oddlycoder.newshq.netutils.NetworkInterface
 import com.oddlycoder.newshq.netutils.NetworkUtils
-import com.oddlycoder.newshq.netutils.NetworkWorkManager
 import kotlinx.android.synthetic.main.fragment_network_state.*
 import java.util.concurrent.TimeUnit
 
@@ -57,16 +56,4 @@ class NetworkStateFragment : Fragment() {
         })
     }
 
-    fun networkStateMonitor() {
-
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiredNetworkType(NetworkType.UNMETERED)
-            .build()
-
-        val networkRequest: WorkRequest = PeriodicWorkRequest
-            .Builder(NetworkWorkManager::class.java, 5, TimeUnit.MINUTES, 10, TimeUnit.MINUTES)
-            .setConstraints(constraints)
-            .build()
-    }
 }
