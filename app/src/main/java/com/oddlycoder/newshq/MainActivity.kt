@@ -14,30 +14,49 @@ import com.oddlycoder.newshq.databinding.ActivityMainBinding
 import com.oddlycoder.newshq.model.Article
 import com.oddlycoder.newshq.view.ArticleDetailFragment
 import com.oddlycoder.newshq.view.ArticlesFragment
+import com.oddlycoder.newshq.view.NetworkStateFragment
 
 class MainActivity : AppCompatActivity() {
 
-    // setup activity view binding
+    private lateinit var networkConnectivity: NetworkUtils
+
+    // setup activity view binding once
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        if (savedInstanceState == null) {
-            val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-            if (fragment == null) {
-                // setup article fragment from factory
-                val article = ArticlesFragment.newInstance()
-                supportFragmentManager.beginTransaction().add(binding.fragmentContainer.id, article)
-                    .commit()
-            }
-        }
+        networkConnectivity = NetworkUtils()
+        networkConnectivity.isNetworkConnected(applicationContext)
 
+        val networkState = networkConnectivity.hasNetwork()
+
+        if (networkState) {
+            Log.d(TAG, "onCreate: Network has capable internet")
+            if (savedInstanceState == null) {
+                val article = ArticlesFragment.newInstance()
+                initFragment(article)
+            }
+        } else {
+            val networkStateFrag = NetworkStateFragment.newInstance()
+            initFragment(networkStateFrag)
+        }
     }
 
+    private fun initFragment(fragment: Fragment) {
+        val container = supportFragmentManager.findFragmentById(binding.fragmentContainer.id)
+        val frag = container ?: fragment
+        supportFragmentManager.beginTransaction()
+            .add(binding.fragmentContainer.id, frag)
+            .commit()
+    }
 
 
 
