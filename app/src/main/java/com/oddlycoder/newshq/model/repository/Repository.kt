@@ -16,4 +16,8 @@ object Repository {
         return newsBuilder.getArticles()
     }
 
+    fun getArticleCallFailed(): LiveData<Boolean> {
+        return newsBuilder.getArticleFailureResult()
+    }
+
 }

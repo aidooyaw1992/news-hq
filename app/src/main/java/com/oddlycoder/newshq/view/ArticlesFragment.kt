@@ -33,6 +33,7 @@ class ArticlesFragment : Fragment() {
 
     // recycler adapter
     private var adapter: ArticlesAdapter? = null
+    private var articleCall: Boolean = false
 
     companion object {
         // setup fragment factory
@@ -66,7 +67,13 @@ class ArticlesFragment : Fragment() {
             binding.progressCircular.visibility = View.GONE
             // reload recycler if data is retrieve
             adapter?.notifyDataSetChanged()
-        })
+        }).also { articleViewModel.articleCall().observe(this, Observer { failed ->
+            // observe call failure
+            if (failed) {
+                binding.progressCircular.visibility = View.GONE
+                Toast.makeText(context, "Something went wrong. Failed to get articles", Toast.LENGTH_LONG).show()
+            }
+        }) }
 
     }
 

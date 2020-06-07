@@ -1,24 +1,18 @@
 package com.oddlycoder.newshq
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.oddlycoder.newshq.databinding.ActivityMainBinding
-import com.oddlycoder.newshq.model.Article
-import com.oddlycoder.newshq.view.ArticleDetailFragment
+import com.oddlycoder.newshq.netutils.NetworkInterface
+import com.oddlycoder.newshq.netutils.NetworkUtils
 import com.oddlycoder.newshq.view.ArticlesFragment
 import com.oddlycoder.newshq.view.NetworkStateFragment
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var networkConnectivity: NetworkUtils
+    private lateinit var networkConnectivity: NetworkInterface
 
     // setup activity view binding once
     private val binding: ActivityMainBinding by lazy {
@@ -40,11 +34,13 @@ class MainActivity : AppCompatActivity() {
 
         if (networkState) {
             Log.d(TAG, "onCreate: Network has capable internet")
+            // fragment already inflated?
             if (savedInstanceState == null) {
                 val article = ArticlesFragment.newInstance()
                 initFragment(article)
             }
         } else {
+            // switch here if network isn't available on start
             val networkStateFrag = NetworkStateFragment.newInstance()
             initFragment(networkStateFrag)
         }

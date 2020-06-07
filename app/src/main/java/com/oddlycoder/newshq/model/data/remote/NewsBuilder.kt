@@ -14,6 +14,8 @@ object NewsBuilder {
 
     // articles from response
     private var articlesData = MutableLiveData<List<Article>>()
+    // detect failure
+    private var articleCallFailed = MutableLiveData<Boolean>()
 
     init {
         val baseUrl = "https://learnappmaking.com/ex/"
@@ -44,8 +46,13 @@ object NewsBuilder {
 
             override fun onFailure(call: Call<News>, t: Throwable) {
                 Log.d("NewsBuilder", "onFailure: something went wrong ", t)
+                articleCallFailed.value = true
             }
         })
+    }
+
+    fun getArticleFailureResult(): LiveData<Boolean> {
+        return articleCallFailed
     }
 
     fun getArticles(): LiveData<List<Article>> {

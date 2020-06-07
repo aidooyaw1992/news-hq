@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">News HQ</string>
     <string name="news_header">News</string>
-    <string name="network_stats_info">Your network connection seems to be down..\nThis page would automatically reload if network is detected.</string>
+    <string name="network_stats_info">Oops, you seem to be offline…\nTo proceed reconnect to your network</string>
 
     <string name="placeholder_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
         Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer

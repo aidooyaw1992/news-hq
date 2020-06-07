@@ -1,18 +1,17 @@
-package com.oddlycoder.newshq
+package com.oddlycoder.newshq.netutils
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.core.content.getSystemService
 
-class NetworkUtils {
+class NetworkUtils : NetworkInterface {
     
     private var hasNetwork: Boolean = false
 
     @RequiresApi(Build.VERSION_CODES.M)
-    fun isNetworkConnected(context: Context) {
+    override fun isNetworkConnected(context: Context) {
         val connectivity =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -25,7 +24,7 @@ class NetworkUtils {
                 networkHasConnection.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
-    fun hasNetwork(): Boolean {
+    override fun hasNetwork(): Boolean {
         return hasNetwork
     }
 

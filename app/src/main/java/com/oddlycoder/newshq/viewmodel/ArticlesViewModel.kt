@@ -31,4 +31,8 @@ class ArticlesViewModel : ViewModel() {
         return articlesLiveData
     }
 
+    fun articleCall(): LiveData<Boolean> {
+        return repository.getArticleCallFailed()
+    }
+
 }
