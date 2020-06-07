@@ -21,6 +21,10 @@ data class Urls(
     val prev: String
 )
 
+/**
+ * serialized to make it possible for
+ * passing through fragment arguments
+ */
 data class Article (
     @JsonProperty("id")
     val id: String,

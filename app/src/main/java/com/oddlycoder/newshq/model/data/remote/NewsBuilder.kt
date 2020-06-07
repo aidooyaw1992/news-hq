@@ -6,32 +6,37 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.oddlycoder.newshq.model.Article
 import com.oddlycoder.newshq.model.News
-import okhttp3.OkHttpClient
 import retrofit2.*
 import retrofit2.converter.jackson.JacksonConverterFactory
 
 object NewsBuilder {
 
-    // articles from response
+    /** articles from request call should be stored here */
     private var articlesData = MutableLiveData<List<Article>>()
-    // detect failure
+
+    /** set value if request failed to return what we wanted. */
     private var articleCallFailed = MutableLiveData<Boolean>()
 
     init {
         val baseUrl = "https://learnappmaking.com/ex/"
+        // ??
         val key = "CHWGk3OTwgObtQxGqdLvVhwji6FsYm95oe87o3ju"
 
-
-        // retrofit implements service interface, builds url
+        /**
+         * url request is built from here.
+         * retrofit does that from this interface, check {@see NewsService.kt}
+         * */
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(JacksonConverterFactory.create())
             .build()
 
-        // client setup
         val service = retrofit.create(NewsService::class.java)
 
-        // make request
+        /**
+         * make a get request after everything is setup
+         * enqueue should do it async
+         */
         val call = service.getNews(key)
         call.enqueue(object: Callback<News> {
 

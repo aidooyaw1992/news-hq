@@ -21,7 +21,9 @@ class ArticlesViewModel : ViewModel() {
         return articlesList
     }
 
-    // articles news result
+    /**
+     *  articles result from repository
+     * */
     fun allArticles(): MutableLiveData<List<Article>> {
         articlesLiveData = repository.getArticles() as MutableLiveData<List<Article>>
         //return repository.getArticles() as MutableLiveData<List<Article>>

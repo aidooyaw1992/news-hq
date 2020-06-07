@@ -1,5 +1,6 @@
 package com.oddlycoder.newshq
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var networkConnectivity: NetworkInterface
 
-    // setup activity view binding once
+    /** setup activity view binding once */
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
                 initFragment(article)
             }
         } else {
-            // switch here if network isn't available on start
+            /** should switch here if network isn't available on start */
             val networkStateFrag = NetworkStateFragment.newInstance()
             initFragment(networkStateFrag)
         }
@@ -53,7 +54,5 @@ class MainActivity : AppCompatActivity() {
             .add(binding.fragmentContainer.id, frag)
             .commit()
     }
-
-
 
 }

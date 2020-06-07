@@ -32,20 +32,25 @@ class NetworkStateFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_network_state, container, false)
         mImageButtonTestConnection = view.findViewById(R.id.image_button_test_connection)
-        networkStateMonitor()
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // is connection available switch to article fragment
+        /**
+         * is connection available switch to article fragment
+         * on user click
+         */
         image_button_test_connection?.setOnClickListener(View.OnClickListener { v ->
+
             networkConnectivity = NetworkUtils()
             networkConnectivity.isNetworkConnected(view.context)
             val networkState = networkConnectivity.hasNetwork()
+
             if (networkState) {
                 val fragment = ArticlesFragment.newInstance()
                 val fm = activity?.supportFragmentManager
+
                 fm?.beginTransaction()
                     ?.replace(R.id.fragment_container, fragment)
                     ?.setCustomAnimations(R.anim.enter_right, R.anim.exit_left)

@@ -22,11 +22,11 @@ import java.io.Serializable
 
 class ArticlesFragment : Fragment() {
 
-    // handle view binding reference
+    /** handle view binding reference */
     private var _binding: FragmentArticlesBinding? = null
     private val binding get() = _binding!!
 
-    // view model init
+    /** view model init */
     private val articleViewModel: ArticlesViewModel by lazy {
         ViewModelProvider(this).get(ArticlesViewModel::class.java)
     }
@@ -36,7 +36,7 @@ class ArticlesFragment : Fragment() {
     private var articleCall: Boolean = false
 
     companion object {
-        // setup fragment factory
+        /** setup fragment factory */
         fun newInstance(): ArticlesFragment {
             return ArticlesFragment()
         }
@@ -51,11 +51,11 @@ class ArticlesFragment : Fragment() {
         val view = binding.root
         binding.articlesRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        // hide scroll end effect
+        /** hide scroll end effect */
         binding.articlesRecyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         binding.progressCircular.visibility = View.VISIBLE
 
-        // initialize recycler view and articles
+        /**  should initialize recycler view and articles */
         updateUI()
         return view
     }
@@ -65,10 +65,10 @@ class ArticlesFragment : Fragment() {
             adapter = ArticlesAdapter(liveArticles)
             binding.articlesRecyclerView.adapter = adapter
             binding.progressCircular.visibility = View.GONE
-            // reload recycler if data is retrieve
+            /** reload recycler if data is retrieve */
             adapter?.notifyDataSetChanged()
         }).also { articleViewModel.articleCall().observe(this, Observer { failed ->
-            // observe call failure
+            /** observe call failure */
             if (failed) {
                 binding.progressCircular.visibility = View.GONE
                 Toast.makeText(context, "Something went wrong. Failed to get articles", Toast.LENGTH_LONG).show()
@@ -79,10 +79,13 @@ class ArticlesFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // clean up binding reference
+        /** clean up binding reference */
         _binding = null
     }
 
+    /**
+     *  article fragment recycler view adapter
+     */
     private inner class ArticlesAdapter(var articles: List<Article>) :
         RecyclerView.Adapter<ArticleViewHolder>() {
 
@@ -97,7 +100,7 @@ class ArticlesFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
             val article = articles[position]
-            // set article result to views
+            /** setting article result to views */
             holder.bind(article)
         }
     }
@@ -121,7 +124,7 @@ class ArticlesFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
-            // newInstance factory sets up detail
+            /** newInstance factory sets up detail */
             val fragment = ArticleDetailFragment.newInstance(article)
             val fm = activity?.supportFragmentManager
             fm?.beginTransaction()

@@ -21,14 +21,14 @@ class ArticleDetailFragment : Fragment() {
 
     private var article: Article? = null
 
-    // detail view model
+    /** detail view model */
     private val articleDetailViewModel: ArticleDetailViewModel by lazy {
         ViewModelProvider(this).get(ArticleDetailViewModel::class.java)
     }
 
     companion object {
         private const val ARTICLE = "article"
-        // detail factory setup
+        /** detail factory setup */
         fun newInstance(article: Article): ArticleDetailFragment {
             val aArgs = Bundle()
             aArgs.putSerializable(ARTICLE, article)
@@ -44,12 +44,12 @@ class ArticleDetailFragment : Fragment() {
         _binding = FragmentArticleDetailBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
-        // restore article state
+        /** restore article state */
         if (savedInstanceState != null) {
             articleDetailViewModel.setArticle(savedInstanceState.getSerializable(ARTICLE) as Article)
         }
 
-        // was article passed to fragment
+        /** was article passed to fragment */
         if (arguments != null) {
             val article = arguments?.getSerializable(ARTICLE)
             articleDetailViewModel.setArticle(article as Article)
@@ -72,7 +72,7 @@ class ArticleDetailFragment : Fragment() {
         setupUI()
     }
 
-    // persist article model
+    /** persist article model */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(ARTICLE, articleDetailViewModel.getArticle())
@@ -84,11 +84,11 @@ class ArticleDetailFragment : Fragment() {
         binding.textViewDetailAuthor.text = articleDetailViewModel.getArticle().author
         binding.textViewDetailDescription.text = articleDetailViewModel.getArticle().text
 
-        // load image from url if not url not empty
+        /** load image from url if not url not empty */
         if (articleDetailViewModel.getArticle().image.isEmpty()) {
             binding.imageViewDetailImage.setImageResource(R.drawable.error_loading_image)
             return
-        }
+        } /** use picasso then */
         Picasso
             .get()
             .load(articleDetailViewModel.getArticle().image)
@@ -110,7 +110,7 @@ class ArticleDetailFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // destroy binding reference
+        /** destroy binding reference */
         _binding = null
     }
 
