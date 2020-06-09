@@ -1,6 +1,7 @@
 package com.oddlycoder.newshq.view
 
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,21 +23,18 @@ import java.io.Serializable
 
 class ArticlesFragment : Fragment() {
 
-    /** handle view binding reference */
     private var _binding: FragmentArticlesBinding? = null
     private val binding get() = _binding!!
 
-    /** view model init */
     private val articleViewModel: ArticlesViewModel by lazy {
         ViewModelProvider(this).get(ArticlesViewModel::class.java)
     }
 
     // recycler adapter
-    private var adapter: ArticlesAdapter? = null
+    private var adapter: ArticlesAdapter? = ArticlesAdapter(emptyList())
     private var articleCall: Boolean = false
 
     companion object {
-        /** setup fragment factory */
         fun newInstance(): ArticlesFragment {
             return ArticlesFragment()
         }
@@ -55,31 +53,54 @@ class ArticlesFragment : Fragment() {
         binding.articlesRecyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         binding.progressCircular.visibility = View.VISIBLE
 
-        /**  should initialize recycler view and articles */
-        updateUI()
+        /** init recycler with empty list */
+        binding.articlesRecyclerView.adapter = adapter
+
+        //updateUI()
         return view
     }
 
-    private fun updateUI() {
-        articleViewModel.allArticles().observe(this, Observer { liveArticles ->
-            adapter = ArticlesAdapter(liveArticles)
-            binding.articlesRecyclerView.adapter = adapter
-            binding.progressCircular.visibility = View.GONE
-            /** reload recycler if data is retrieve */
-            adapter?.notifyDataSetChanged()
-        }).also { articleViewModel.articleCall().observe(this, Observer { failed ->
-            /** observe call failure */
-            if (failed) {
-                binding.progressCircular.visibility = View.GONE
-                Toast.makeText(context, "Something went wrong. Failed to get articles", Toast.LENGTH_LONG).show()
-            }
-        }) }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        articleViewModel.allArticles().observe(viewLifecycleOwner, Observer { liveArticles ->
+            updateUI(liveArticles)
+        })
+    }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        /** set fragment callback to activity context */
+        callbacks = context as FragmentCallbacks
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        articleViewModel.articleCall().observe(viewLifecycleOwner, Observer {failedCall ->
+            if (failedCall) {
+                binding.progressCircular.visibility = View.GONE
+                Toast.makeText(
+                    context,
+                    "Something went wrong. Failed to get articles",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        })
+    }
+
+    private fun updateUI(articles: List<Article>) {
+        adapter = ArticlesAdapter(articles)
+        binding.articlesRecyclerView.adapter = adapter
+        binding.progressCircular.visibility = View.GONE
+        adapter?.notifyDataSetChanged()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        /** clean up binding reference */
         _binding = null
     }
 
@@ -100,7 +121,6 @@ class ArticlesFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
             val article = articles[position]
-            /** setting article result to views */
             holder.bind(article)
         }
     }
@@ -124,15 +144,16 @@ class ArticlesFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
-            /** newInstance factory sets up detail */
-            val fragment = ArticleDetailFragment.newInstance(article)
-            val fm = activity?.supportFragmentManager
-            fm?.beginTransaction()
-                ?.replace(R.id.fragment_container, fragment)
-                ?.addToBackStack("detail_fragment")
-                ?.setCustomAnimations(R.anim.enter_right, R.anim.exit_left)
-                ?.commit()
+            /** activity handles fragment transaction */
+            callbacks?.onArticleSelected(article)
         }
     }
+
+    /** delegate fragment call to activity */
+    interface FragmentCallbacks {
+        fun onArticleSelected(article: Article)
+    }
+
+    private var callbacks: FragmentCallbacks? = null
 }
 

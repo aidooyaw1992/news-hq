@@ -6,7 +6,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
 
-class NetworkUtils : NetworkInterface {
+object NetworkUtils : NetworkInterface {
     
     private var hasNetwork: Boolean = false
 
@@ -15,7 +15,7 @@ class NetworkUtils : NetworkInterface {
      */
 
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun isNetworkConnected(context: Context) {
+    override fun isNetworkConnected(context: Context): Boolean {
         val connectivity =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -24,9 +24,6 @@ class NetworkUtils : NetworkInterface {
 
         hasNetwork = networkHasConnection != null &&
                 networkHasConnection.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
-
-    override fun hasNetwork(): Boolean {
         return hasNetwork
     }
 

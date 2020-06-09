@@ -42,11 +42,7 @@ class NetworkStateFragment : Fragment() {
          * on user click
          */
         image_button_test_connection?.setOnClickListener(View.OnClickListener { v ->
-
-            networkConnectivity = NetworkUtils()
-            networkConnectivity.isNetworkConnected(view.context)
-            val networkState = networkConnectivity.hasNetwork()
-
+            val networkState = NetworkUtils.isNetworkConnected(view.context)
             if (networkState) {
                 val fragment = ArticlesFragment.newInstance()
                 val fm = activity?.supportFragmentManager

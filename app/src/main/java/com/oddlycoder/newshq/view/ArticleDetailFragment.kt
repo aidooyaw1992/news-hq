@@ -1,5 +1,6 @@
 package com.oddlycoder.newshq.view
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +14,7 @@ import com.oddlycoder.newshq.databinding.FragmentArticleDetailBinding
 import com.oddlycoder.newshq.model.Article
 import com.oddlycoder.newshq.viewmodel.ArticleDetailViewModel
 import com.squareup.picasso.Picasso
+import kotlin.reflect.typeOf
 
 class ArticleDetailFragment : Fragment() {
 
@@ -21,7 +23,6 @@ class ArticleDetailFragment : Fragment() {
 
     private var article: Article? = null
 
-    /** detail view model */
     private val articleDetailViewModel: ArticleDetailViewModel by lazy {
         ViewModelProvider(this).get(ArticleDetailViewModel::class.java)
     }
@@ -30,8 +31,7 @@ class ArticleDetailFragment : Fragment() {
         private const val ARTICLE = "article"
         /** detail factory setup */
         fun newInstance(article: Article): ArticleDetailFragment {
-            val aArgs = Bundle()
-            aArgs.putSerializable(ARTICLE, article)
+            val aArgs = Bundle().apply { putParcelable(ARTICLE, article) }
             return ArticleDetailFragment().also { detail -> detail.arguments = aArgs }
         }
     }
@@ -44,9 +44,8 @@ class ArticleDetailFragment : Fragment() {
         _binding = FragmentArticleDetailBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
-        /** restore article state */
         if (savedInstanceState != null) {
-            articleDetailViewModel.setArticle(savedInstanceState.getSerializable(ARTICLE) as Article)
+            articleDetailViewModel.setArticle(savedInstanceState.getParcelable(ARTICLE)!!)
         }
 
         /** was article passed to fragment */
@@ -75,7 +74,7 @@ class ArticleDetailFragment : Fragment() {
     /** persist article model */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable(ARTICLE, articleDetailViewModel.getArticle())
+        outState.putParcelable(ARTICLE, articleDetailViewModel.getArticle())
     }
 
     private fun setupUI() {
@@ -85,7 +84,7 @@ class ArticleDetailFragment : Fragment() {
         binding.textViewDetailDescription.text = articleDetailViewModel.getArticle().text
 
         /** load image from url if not url not empty */
-        if (articleDetailViewModel.getArticle().image.isEmpty()) {
+        if (articleDetailViewModel.getArticle().image!!.isEmpty()) {
             binding.imageViewDetailImage.setImageResource(R.drawable.error_loading_image)
             return
         } /** use picasso then */
@@ -105,7 +104,7 @@ class ArticleDetailFragment : Fragment() {
     }
 
     private fun popBackFragment() {
-        activity?.onBackPressed()
+        callbacks?.onFragmentBackPressed()
     }
 
     override fun onDestroy() {
@@ -113,5 +112,22 @@ class ArticleDetailFragment : Fragment() {
         /** destroy binding reference */
         _binding = null
     }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as FragmentCallbacks
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
+
+    /** activity handles fragment pop on back press */
+    interface FragmentCallbacks {
+        fun onFragmentBackPressed()
+    }
+
+    private var callbacks: FragmentCallbacks? = null
 
 }

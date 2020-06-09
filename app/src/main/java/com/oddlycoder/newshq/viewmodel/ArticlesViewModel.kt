@@ -14,23 +14,11 @@ class ArticlesViewModel : ViewModel() {
 
     private val repository: Repository = Repository
 
-    private var articlesLiveData = MutableLiveData<List<Article>>()
-    private var articlesList = mutableListOf<Article>()
-
-    fun articlesList(): List<Article> {
-        return articlesList
-    }
-
     /**
      *  articles result from repository
      * */
     fun allArticles(): MutableLiveData<List<Article>> {
-        articlesLiveData = repository.getArticles() as MutableLiveData<List<Article>>
-        //return repository.getArticles() as MutableLiveData<List<Article>>
-        articlesList.let {
-            articlesLiveData
-        }
-        return articlesLiveData
+        return repository.getArticles() as MutableLiveData<List<Article>>
     }
 
     fun articleCall(): LiveData<Boolean> {

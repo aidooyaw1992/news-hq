@@ -9,12 +9,10 @@ import com.oddlycoder.newshq.model.News
 import com.oddlycoder.newshq.model.data.remote.NewsBuilder
 
 object Repository {
-
     /**
      * required results from data.remote: NewsBuilder.kt
      * viewModels should use these
      */
-
     private var newsBuilder = NewsBuilder
 
     fun getArticles(): LiveData<List<Article>> {

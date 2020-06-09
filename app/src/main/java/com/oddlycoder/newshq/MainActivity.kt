@@ -6,16 +6,17 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import com.oddlycoder.newshq.databinding.ActivityMainBinding
+import com.oddlycoder.newshq.model.Article
 import com.oddlycoder.newshq.netutils.NetworkInterface
 import com.oddlycoder.newshq.netutils.NetworkUtils
+import com.oddlycoder.newshq.view.ArticleDetailFragment
 import com.oddlycoder.newshq.view.ArticlesFragment
 import com.oddlycoder.newshq.view.NetworkStateFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ArticlesFragment.FragmentCallbacks, ArticleDetailFragment.FragmentCallbacks {
 
     private lateinit var networkConnectivity: NetworkInterface
 
-    /** setup activity view binding once */
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -28,11 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        networkConnectivity = NetworkUtils()
-        networkConnectivity.isNetworkConnected(applicationContext)
-
-        val networkState = networkConnectivity.hasNetwork()
-
+        val networkState = NetworkUtils.isNetworkConnected(applicationContext)
         if (networkState) {
             Log.d(TAG, "onCreate: Network has capable internet")
             // fragment already inflated?
@@ -53,6 +50,22 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .add(binding.fragmentContainer.id, frag)
             .commit()
+    }
+
+    override fun onArticleSelected(article: Article) {
+        val fragment = ArticleDetailFragment.newInstance(article)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack("detail")
+            .setCustomAnimations(R.anim.enter_right, R.anim.exit_left)
+            .commit()
+    }
+
+    override fun onFragmentBackPressed() {
+        val backStackCount = supportFragmentManager.backStackEntryCount
+        if (backStackCount <= 1) {
+            supportFragmentManager.popBackStack()
+        }
     }
 
 }

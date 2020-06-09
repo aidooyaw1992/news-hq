@@ -11,15 +11,11 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 
 object NewsBuilder {
 
-    /** articles from request call should be stored here */
     private var articlesData = MutableLiveData<List<Article>>()
-
-    /** set value if request failed to return what we wanted. */
     private var articleCallFailed = MutableLiveData<Boolean>()
 
     init {
         val baseUrl = "https://learnappmaking.com/ex/"
-        // ??
         val key = "CHWGk3OTwgObtQxGqdLvVhwji6FsYm95oe87o3ju"
 
         /**

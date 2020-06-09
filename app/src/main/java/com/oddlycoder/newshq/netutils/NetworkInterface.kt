@@ -4,8 +4,6 @@ import android.content.Context
 
 interface NetworkInterface {
 
-    fun isNetworkConnected(context: Context)
-
-    fun hasNetwork(): Boolean
+    fun isNetworkConnected(context: Context): Boolean
 
 }
