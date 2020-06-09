@@ -50,8 +50,8 @@ class ArticleDetailFragment : Fragment() {
 
         /** was article passed to fragment */
         if (arguments != null) {
-            val article = arguments?.getSerializable(ARTICLE)
-            articleDetailViewModel.setArticle(article as Article)
+            val article = arguments?.getParcelable<Article>(ARTICLE)
+            articleDetailViewModel.setArticle(article!!)
         }
 
         return view
