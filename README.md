@@ -20,6 +20,7 @@ the UI views observe and enact changes to their view elements observing the data
 
 The articles are passed to a RecyclerView which presents the articles. On the user tapping an 
 article, the app sends the user to a detail page where the user gets more information. Images 
-are loaded from article URLs using Picasso. 
+are loaded from article URLs using Picasso. Network availability is handled by classes in netutils 
+package on app startup 
 
 
