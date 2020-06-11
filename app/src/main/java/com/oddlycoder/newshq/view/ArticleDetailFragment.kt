@@ -60,13 +60,17 @@ class ArticleDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.imageViewDetailPopBack.setOnClickListener(View.OnClickListener { v ->
+        binding.imageViewDetailPopBack.setOnClickListener { v ->
             popBackFragment()
-        })
+        }
 
-        binding.buttonVisitLink.setOnClickListener(View.OnClickListener {
+        binding.buttonVisitLink.setOnClickListener {
             openUpBrowser()
-        })
+        }
+
+        binding.imageButtonBookmark.setOnClickListener {
+            articleDetailViewModel.cacheCurrentArticle(articleDetailViewModel.getArticle())
+        }
 
         setupUI()
     }

@@ -12,17 +12,26 @@ import com.oddlycoder.newshq.model.repository.Repository
 
 class ArticlesViewModel : ViewModel() {
 
-    private val repository: Repository = Repository
+    private val repository: Repository = Repository.get()
 
     /**
      *  articles result from repository
      * */
-    fun allArticles(): MutableLiveData<List<Article>> {
-        return repository.getArticles() as MutableLiveData<List<Article>>
+    fun allArticles(): LiveData<List<Article>> {
+        return repository.getArticles()
     }
 
+    /** called when retrofit fails to retrieve articles */
     fun articleCall(): LiveData<Boolean> {
         return repository.getArticleCallFailed()
+    }
+
+    /**
+     * called when articleCall is called
+     * get user cache data[articles user clicked on]
+     * */
+    fun cachedArticles(): LiveData<List<Article>> {
+        return repository.getCachedArticles()
     }
 
 }

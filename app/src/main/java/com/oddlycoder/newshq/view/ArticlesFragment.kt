@@ -85,9 +85,12 @@ class ArticlesFragment : Fragment() {
                 binding.progressCircular.visibility = View.GONE
                 Toast.makeText(
                     context,
-                    "Something went wrong. Failed to get articles",
+                    "Something went wrong. Failed to get articles\nSwitching to cached",
                     Toast.LENGTH_LONG
                 ).show()
+               // articleViewModel.cachedArticles().observe(viewLifecycleOwner, Observer { cached ->
+                    // TODO: (updateUI(cached))
+               // })
             }
         })
     }

@@ -2,6 +2,9 @@ package com.oddlycoder.newshq.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.NonNull
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.Serializable
 
@@ -24,7 +27,7 @@ data class Urls(
 )
 
 /**
- * parceled for faster
+ * parceled model for faster
  * passing through fragment arguments
  */
 data class Article (
