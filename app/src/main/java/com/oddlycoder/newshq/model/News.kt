@@ -26,10 +26,6 @@ data class Urls(
     val prev: String
 )
 
-/**
- * parceled model for faster
- * passing through fragment arguments
- */
 data class Article (
     @JsonProperty("id")
     val id: String?,

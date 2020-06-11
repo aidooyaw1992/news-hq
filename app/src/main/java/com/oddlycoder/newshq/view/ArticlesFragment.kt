@@ -83,14 +83,10 @@ class ArticlesFragment : Fragment() {
         articleViewModel.articleCall().observe(viewLifecycleOwner, Observer {failedCall ->
             if (failedCall) {
                 binding.progressCircular.visibility = View.GONE
-                Toast.makeText(
-                    context,
-                    "Something went wrong. Failed to get articles\nSwitching to cached",
-                    Toast.LENGTH_LONG
-                ).show()
-               // articleViewModel.cachedArticles().observe(viewLifecycleOwner, Observer { cached ->
-                    // TODO: (updateUI(cached))
-               // })
+                articleViewModel.cachedArticles().observe(viewLifecycleOwner, Observer { cached ->
+                    updateUI(cached)
+                   Toast.makeText(context, "Showing bookmarked. Couldn't fetch articles", Toast.LENGTH_SHORT).show()
+               })
             }
         })
     }

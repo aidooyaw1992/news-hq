@@ -13,7 +13,8 @@ import com.oddlycoder.newshq.view.ArticleDetailFragment
 import com.oddlycoder.newshq.view.ArticlesFragment
 import com.oddlycoder.newshq.view.NetworkStateFragment
 
-class MainActivity : AppCompatActivity(), ArticlesFragment.FragmentCallbacks, ArticleDetailFragment.FragmentCallbacks {
+class MainActivity : AppCompatActivity(),
+    ArticlesFragment.FragmentCallbacks, ArticleDetailFragment.FragmentCallbacks {
 
     private lateinit var networkConnectivity: NetworkInterface
 

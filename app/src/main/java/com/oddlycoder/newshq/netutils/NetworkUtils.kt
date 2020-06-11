@@ -11,7 +11,7 @@ object NetworkUtils : NetworkInterface {
     private var hasNetwork: Boolean = false
 
     /**
-     * user's network state
+     * is phone offline..
      */
 
     @RequiresApi(Build.VERSION_CODES.M)

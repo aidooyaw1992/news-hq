@@ -20,7 +20,7 @@ class Repository private constructor(val context: Context) {
 
     companion object {
         private var INSTANCE: Repository? = null
-        private const val DATABASE = "articles-database"
+        private const val DATABASE = "articles_db"
 
         /** context is required to setup room. which is obtained from application context */
         fun initialize(context: Context) {
@@ -34,33 +34,27 @@ class Repository private constructor(val context: Context) {
         }
 
     }
-    /**
-     * room builder: sets up database
-     * */
+
     private var database: ArticleDatabase = Room.databaseBuilder(
         context.applicationContext,
         ArticleDatabase::class.java,
         DATABASE
     ).build()
 
-    /** access dao */
     private val articlesDao = database.articlesDao()
 
-    /** get cached.. */
     fun getCachedArticles(): LiveData<List<Article>> = articlesDao.queryAllArticles()
 
     suspend fun cacheArticles(article: Article) {
-        /** set article tbl with article */
         val articleTbl = convertArticles(article)
-        /** call dao insert */
-        articlesDao.insertIntoArticles(articleTbl)
-        showCacheToast("Article was bookmarked")
+        val queryRes = articlesDao.insertIntoArticles(articleTbl)
+        //showCacheToast("Article was bookmarked")
 
-        /*if (queryRes != null) {
+        if (queryRes > 1L) {
             showCacheToast("Article was bookmarked")
         } else {
             showCacheToast("Article failed to be bookmarked")
-        }*/
+        }
 
     }
 
@@ -69,6 +63,7 @@ class Repository private constructor(val context: Context) {
     }
 
     private fun convertArticles(article: Article): ArticleTbl {
+        /** cache requires [ArticleTbl], should be converted from [Article] */
         return ArticleTbl(
             article.id!!,
             article.url!!,
@@ -80,11 +75,6 @@ class Repository private constructor(val context: Context) {
             article.date!!
         )
     }
-
-    /**
-     * required results from data.remote: NewsBuilder.kt
-     * viewModels should use these
-     */
 
     fun getArticles(): LiveData<List<Article>> {
         return newsBuilder.getArticles()

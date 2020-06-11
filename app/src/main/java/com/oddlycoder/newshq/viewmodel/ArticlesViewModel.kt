@@ -14,9 +14,6 @@ class ArticlesViewModel : ViewModel() {
 
     private val repository: Repository = Repository.get()
 
-    /**
-     *  articles result from repository
-     * */
     fun allArticles(): LiveData<List<Article>> {
         return repository.getArticles()
     }
@@ -28,7 +25,7 @@ class ArticlesViewModel : ViewModel() {
 
     /**
      * called when articleCall is called
-     * get user cache data[articles user clicked on]
+     * get user cache data[articles user bookmarked]
      * */
     fun cachedArticles(): LiveData<List<Article>> {
         return repository.getCachedArticles()

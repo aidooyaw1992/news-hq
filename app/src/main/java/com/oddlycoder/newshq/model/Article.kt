@@ -5,9 +5,8 @@ import androidx.room.PrimaryKey
 
 
 /**
- * id in Article data class in @link News.kt
- * is nullable to allow Parcelable to serialize data.
- * ended up creating this class to handle caching..
+ * couldn't use [Article] in [News]
+ * as its marked nullable to allow Parcelable to serialize data. ended up with this
  */
 @Entity(tableName = "article_tbl")
 data class ArticleTbl(

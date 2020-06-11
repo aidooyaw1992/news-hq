@@ -20,7 +20,7 @@ object NewsBuilder {
 
         /**
          * url request is built from here.
-         * retrofit does that from this interface, check {@see NewsService.kt}
+         * retrofit does that from this interface, @see [NewsService]
          * */
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
