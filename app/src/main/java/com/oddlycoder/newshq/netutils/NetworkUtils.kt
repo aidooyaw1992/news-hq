@@ -10,10 +10,7 @@ object NetworkUtils : NetworkInterface {
     
     private var hasNetwork: Boolean = false
 
-    /**
-     * is phone offline..
-     */
-
+    // does phone have network
     @RequiresApi(Build.VERSION_CODES.M)
     override fun isNetworkConnected(context: Context): Boolean {
         val connectivity =
@@ -23,7 +20,10 @@ object NetworkUtils : NetworkInterface {
             connectivity.getNetworkCapabilities(connectivity.activeNetwork)
 
         hasNetwork = networkHasConnection != null &&
-                networkHasConnection.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                (networkHasConnection.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ||
+                networkHasConnection.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) ||
+                networkHasConnection.hasTransport(NetworkCapabilities.TRANSPORT_VPN))
+
         return hasNetwork
     }
 
