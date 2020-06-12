@@ -4,10 +4,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-/**
- * couldn't use [Article] in [News]
- * as its marked nullable to allow Parcelable to serialize data. ended up with this
- */
 @Entity(tableName = "article_tbl")
 data class ArticleTbl(
     @PrimaryKey

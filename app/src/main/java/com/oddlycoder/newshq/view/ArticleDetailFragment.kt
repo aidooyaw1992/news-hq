@@ -28,10 +28,10 @@ class ArticleDetailFragment : Fragment() {
     }
 
     companion object {
-        private const val ARTICLE = "article"
-        /** detail factory setup */
+        private const val ARG_ARTICLE = "article"
+
         fun newInstance(article: Article): ArticleDetailFragment {
-            val aArgs = Bundle().apply { putParcelable(ARTICLE, article) }
+            val aArgs = Bundle().apply { putParcelable(ARG_ARTICLE, article) }
             return ArticleDetailFragment().also { detail -> detail.arguments = aArgs }
         }
     }
@@ -45,12 +45,11 @@ class ArticleDetailFragment : Fragment() {
         val view = binding.root
 
         if (savedInstanceState != null) {
-            articleDetailViewModel.setArticle(savedInstanceState.getParcelable(ARTICLE)!!)
+            articleDetailViewModel.setArticle(savedInstanceState.getParcelable(ARG_ARTICLE)!!)
         }
 
-        /** was article passed to fragment */
         if (arguments != null) {
-            val article = arguments?.getParcelable<Article>(ARTICLE)
+            val article = arguments?.getParcelable<Article>(ARG_ARTICLE)
             articleDetailViewModel.setArticle(article!!)
         }
 
@@ -75,10 +74,9 @@ class ArticleDetailFragment : Fragment() {
         setupUI()
     }
 
-    /** persist article model */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(ARTICLE, articleDetailViewModel.getArticle())
+        outState.putParcelable(ARG_ARTICLE, articleDetailViewModel.getArticle())
     }
 
     private fun setupUI() {
@@ -87,11 +85,10 @@ class ArticleDetailFragment : Fragment() {
         binding.textViewDetailAuthor.text = articleDetailViewModel.getArticle().author
         binding.textViewDetailDescription.text = articleDetailViewModel.getArticle().text
 
-        /** load image from url if not url not empty */
         if (articleDetailViewModel.getArticle().image!!.isEmpty()) {
             binding.imageViewDetailImage.setImageResource(R.drawable.error_loading_image)
             return
-        } /** use picasso then */
+        }
         Picasso
             .get()
             .load(articleDetailViewModel.getArticle().image)
@@ -113,7 +110,7 @@ class ArticleDetailFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        /** destroy binding reference */
+        // destroy binding reference
         _binding = null
     }
 
@@ -127,7 +124,7 @@ class ArticleDetailFragment : Fragment() {
         callbacks = null
     }
 
-    /** activity handles fragment pop on back press */
+    // activity handles fragment pop on back button press
     interface FragmentCallbacks {
         fun onFragmentBackPressed()
     }

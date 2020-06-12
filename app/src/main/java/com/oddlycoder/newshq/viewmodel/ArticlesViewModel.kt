@@ -18,17 +18,16 @@ class ArticlesViewModel : ViewModel() {
         return repository.getArticles()
     }
 
-    /** called when retrofit fails to retrieve articles */
-    fun articleCall(): LiveData<Boolean> {
+    fun articleCallFailed(): LiveData<Boolean> {
         return repository.getArticleCallFailed()
     }
 
-    /**
-     * called when articleCall is called
-     * get user cache data[articles user bookmarked]
-     * */
     fun cachedArticles(): LiveData<List<Article>> {
         return repository.getCachedArticles()
+    }
+
+    fun retryRequest() {
+        return repository.retryRequest()
     }
 
 }

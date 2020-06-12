@@ -20,9 +20,9 @@ object NetworkUtils : NetworkInterface {
             connectivity.getNetworkCapabilities(connectivity.activeNetwork)
 
         hasNetwork = networkHasConnection != null &&
-                (networkHasConnection.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ||
-                networkHasConnection.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) ||
-                networkHasConnection.hasTransport(NetworkCapabilities.TRANSPORT_VPN))
+                networkHasConnection.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) //&&
+//                networkHasConnection.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) ||
+//                networkHasConnection.hasTransport(NetworkCapabilities.TRANSPORT_VPN))
 
         return hasNetwork
     }

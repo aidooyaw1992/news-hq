@@ -29,7 +29,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ImageButton
-        android:id="@+id/image_button_test_connection"
+        android:id="@+id/image_button_move_toBookmarks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_autorenew"

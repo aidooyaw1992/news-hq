@@ -16,13 +16,13 @@ import java.lang.IllegalStateException
 
 class Repository private constructor(val context: Context) {
 
-    private var newsBuilder = NewsBuilder
+    private val newsBuilder = NewsBuilder.get()
 
     companion object {
         private var INSTANCE: Repository? = null
-        private const val DATABASE = "articles_db"
 
-        /** context is required to setup room. which is obtained from application context */
+        private const val DATABASE = "articles-db"
+
         fun initialize(context: Context) {
             if (INSTANCE == null) {
                 INSTANCE = Repository(context)
@@ -41,6 +41,7 @@ class Repository private constructor(val context: Context) {
         DATABASE
     ).build()
 
+    // create DAO for database operations
     private val articlesDao = database.articlesDao()
 
     fun getCachedArticles(): LiveData<List<Article>> = articlesDao.queryAllArticles()
@@ -51,7 +52,7 @@ class Repository private constructor(val context: Context) {
         //showCacheToast("Article was bookmarked")
 
         if (queryRes > 1L) {
-            showCacheToast("Article was bookmarked")
+            showCacheToast("Article is bookmarked")
         } else {
             showCacheToast("Article failed to be bookmarked")
         }
@@ -63,7 +64,6 @@ class Repository private constructor(val context: Context) {
     }
 
     private fun convertArticles(article: Article): ArticleTbl {
-        /** cache requires [ArticleTbl], should be converted from [Article] */
         return ArticleTbl(
             article.id!!,
             article.url!!,
@@ -82,6 +82,10 @@ class Repository private constructor(val context: Context) {
 
     fun getArticleCallFailed(): LiveData<Boolean> {
         return newsBuilder.getArticleFailureResult()
+    }
+
+    fun retryRequest() {
+        return newsBuilder.cloneRequest()
     }
 
 }

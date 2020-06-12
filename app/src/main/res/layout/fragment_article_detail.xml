@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="4">
 
                 <TextView
                     android:id="@+id/text_view_detail_author"
@@ -87,13 +87,17 @@
                     android:textColor="#959495"
                     tools:text="Article author name"/>
 
-                <ImageButton
+                <TextView
                     android:id="@+id/image_button_bookmark"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_bookmark"
+                    android:text="bookmark for offline"
+                    android:textSize="10sp"
+                    android:layout_marginTop="6dp"
+                    android:textAllCaps="false"
+                    android:drawableEnd="@drawable/ic_bookmark"
                     style="@style/Widget.AppCompat.Button.Borderless"/>
 
             </LinearLayout>
@@ -102,7 +106,7 @@
                 android:id="@+id/text_view_detail_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/placeholder_text"
+                tools:text="@string/placeholder"
                 android:layout_marginTop="12dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"/>

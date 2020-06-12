@@ -30,9 +30,7 @@ class ArticlesFragment : Fragment() {
         ViewModelProvider(this).get(ArticlesViewModel::class.java)
     }
 
-    // recycler adapter
     private var adapter: ArticlesAdapter? = ArticlesAdapter(emptyList())
-    private var articleCall: Boolean = false
 
     companion object {
         fun newInstance(): ArticlesFragment {
@@ -49,14 +47,13 @@ class ArticlesFragment : Fragment() {
         val view = binding.root
         binding.articlesRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        /** hide scroll end effect */
+        // hide recycler scroll effect
         binding.articlesRecyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         binding.progressCircular.visibility = View.VISIBLE
 
-        /** init recycler with empty list */
+        // init recycler with empty list
         binding.articlesRecyclerView.adapter = adapter
 
-        //updateUI()
         return view
     }
 
@@ -65,11 +62,17 @@ class ArticlesFragment : Fragment() {
         articleViewModel.allArticles().observe(viewLifecycleOwner, Observer { liveArticles ->
             updateUI(liveArticles)
         })
+
+        binding.imageButtonReload.setOnClickListener {
+             binding.progressCircular.visibility = View.VISIBLE
+             binding.imageButtonReload.visibility = View.GONE
+            articleViewModel.retryRequest()
+        }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        /** set fragment callback to activity context */
+        // set fragment callback to activity context
         callbacks = context as FragmentCallbacks
     }
 
@@ -80,13 +83,24 @@ class ArticlesFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        articleViewModel.articleCall().observe(viewLifecycleOwner, Observer {failedCall ->
+        // listen to call failure, get cache articles if request failed
+        observeCallState()
+    }
+
+    private fun observeCallState() {
+        articleViewModel.articleCallFailed().observe(viewLifecycleOwner, Observer { failedCall ->
             if (failedCall) {
                 binding.progressCircular.visibility = View.GONE
+                binding.imageButtonReload.visibility = View.VISIBLE
                 articleViewModel.cachedArticles().observe(viewLifecycleOwner, Observer { cached ->
+                    if (cached.isEmpty()) {
+                        Toast.makeText(context, getString(R.string.cache_empty), Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, getString(R.string.cache_msg), Toast.LENGTH_SHORT).show()
+                    }
                     updateUI(cached)
-                   Toast.makeText(context, "Showing bookmarked. Couldn't fetch articles", Toast.LENGTH_SHORT).show()
-               })
+
+                })
             }
         })
     }
@@ -103,9 +117,7 @@ class ArticlesFragment : Fragment() {
         _binding = null
     }
 
-    /**
-     *  article fragment recycler view adapter
-     */
+
     private inner class ArticlesAdapter(var articles: List<Article>) :
         RecyclerView.Adapter<ArticleViewHolder>() {
 
@@ -143,12 +155,12 @@ class ArticlesFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
-            /** activity handles fragment transaction */
+            // activity handles fragment transaction
             callbacks?.onArticleSelected(article)
         }
     }
 
-    /** delegate fragment call to activity */
+    // delegate fragment call to activity
     interface FragmentCallbacks {
         fun onArticleSelected(article: Article)
     }

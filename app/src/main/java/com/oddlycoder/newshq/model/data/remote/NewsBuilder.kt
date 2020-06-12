@@ -1,55 +1,58 @@
 package com.oddlycoder.newshq.model.data.remote
 
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.oddlycoder.newshq.R
 import com.oddlycoder.newshq.model.Article
 import com.oddlycoder.newshq.model.News
 import retrofit2.*
 import retrofit2.converter.jackson.JacksonConverterFactory
+import java.lang.IllegalStateException
 
-object NewsBuilder {
+class NewsBuilder private constructor(val context: Context) {
 
     private var articlesData = MutableLiveData<List<Article>>()
     private var articleCallFailed = MutableLiveData<Boolean>()
+    private lateinit var articleCall: Call<News>
+
+    companion object {
+        private var INSTANCE: NewsBuilder? = null
+
+        fun initialize(context: Context) {
+            if (INSTANCE == null) {
+                INSTANCE = NewsBuilder(context)
+            }
+        }
+
+        fun get(): NewsBuilder {
+            return INSTANCE ?: throw IllegalStateException("Failed to initialize NewsBuilder")
+        }
+    }
 
     init {
         val baseUrl = "https://learnappmaking.com/ex/"
-        val key = "CHWGk3OTwgObtQxGqdLvVhwji6FsYm95oe87o3ju"
+        val key = context.getString(R.string.url_key)
 
-        /**
-         * url request is built from here.
-         * retrofit does that from this interface, @see [NewsService]
-         * */
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(JacksonConverterFactory.create())
             .build()
 
+        // create implementation of endpoint
         val service = retrofit.create(NewsService::class.java)
-
-        /**
-         * make a get request after everything is setup
-         * enqueue should do it async
-         */
         val call = service.getNews(key)
-        call.enqueue(object: Callback<News> {
 
-            override fun onResponse(call: Call<News>, response: Response<News>) {
-                if (!response.isSuccessful) return
+        call.enqueue(RequestCallback())
+    }
 
-                val news = response.body()
-
-                // set articles if safe
-                articlesData.value = news?.articles as MutableList<Article>
-            }
-
-            override fun onFailure(call: Call<News>, t: Throwable) {
-                Log.d("NewsBuilder", "onFailure: something went wrong ", t)
-                articleCallFailed.value = true
-            }
-        })
+    // clone request for retries
+    fun cloneRequest() {
+        articleCall.clone().enqueue(RequestCallback())
+        Toast.makeText(context, "Retrying call", Toast.LENGTH_SHORT).show()
     }
 
     fun getArticleFailureResult(): LiveData<Boolean> {
@@ -58,6 +61,22 @@ object NewsBuilder {
 
     fun getArticles(): LiveData<List<Article>> {
         return articlesData
+    }
+
+    private inner class RequestCallback : Callback<News> {
+        override fun onResponse(call: Call<News>, response: Response<News>) {
+            if (!response.isSuccessful) return
+
+            val news = response.body()
+            articlesData.value = news?.articles as MutableList<Article>
+        }
+
+        override fun onFailure(call: Call<News>, t: Throwable) {
+            Log.d("NewsBuilder", "onFailure: something went wrong ", t)
+            articleCallFailed.value = true
+            articleCall = call
+
+        }
     }
 
 }

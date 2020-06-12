@@ -14,7 +14,6 @@ interface ArticleDao {
     @Query("SELECT * FROM article_tbl")
     fun queryAllArticles(): LiveData<List<Article>>
 
-    /** if conflict on insert, replace */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertIntoArticles(articleTbl: ArticleTbl): Long
 
